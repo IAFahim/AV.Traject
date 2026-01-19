@@ -1,15 +1,18 @@
-name: AV.Traject.Runtime
-rootNamespace: AV.Traject
-references:
-- Unity.Mathematics
-- Unity.Burst
-- AV.Eases.Runtime
-includePlatforms: []
-excludePlatforms: []
-allowUnsafeCode: true
-overrideReferences: false
-precompiledReferences: []
-autoReferenced: true
-defineConstraints: []
-versionDefines: []
-noEngineReferences: false
+{
+    "name": "AV.Traject.Runtime",
+    "rootNamespace": "AV.Traject",
+    "references": [
+        "Unity.Mathematics",
+        "Unity.Burst",
+        "AV.Eases.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

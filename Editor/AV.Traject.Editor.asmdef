@@ -1,15 +1,19 @@
-name: AV.Traject.Editor
-rootNamespace: AV.Traject
-references:
-- AV.Traject.Runtime
-- AV.Traject.Integration
-includePlatforms:
-- Editor
-excludePlatforms: []
-allowUnsafeCode: false
-overrideReferences: true
-precompiledReferences: []
-autoReferenced: true
-defineConstraints: []
-versionDefines: []
-noEngineReferences: false
+{
+    "name": "AV.Traject.Editor",
+    "rootNamespace": "AV.Traject",
+    "references": [
+        "AV.Traject.Runtime",
+        "AV.Traject.Integration"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

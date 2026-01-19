@@ -1,0 +1,20 @@
+name: AV.Traject.Integration
+rootNamespace: AV.Traject
+references:
+- Unity.Mathematics
+- Unity.Burst
+- AV.Traject
+- AV.Traject.Runtime
+- AV.CancelFoldout.Runtime
+- AV.Direction.Runtime
+includePlatforms:
+- Editor
+excludePlatforms: []
+allowUnsafeCode: true
+overrideReferences: false
+precompiledReferences: []
+autoReferenced: true
+defineConstraints: []
+versionDefines: []
+noEngineReferences: false
+

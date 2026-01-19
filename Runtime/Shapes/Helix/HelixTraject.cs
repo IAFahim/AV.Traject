@@ -3,14 +3,13 @@ using AV.Traject.Runtime.Integration;
 using Unity.Mathematics;
 using UnityEngine;
 
-[HelpURL("https://github.com/IAFahim/AV.Traject")]
-
 namespace AV.Traject.Runtime.Shapes.Helix
 {
     /// <summary>
     /// Helix (spiral) trajectory asset.
     /// Creates corkscrew/magic missile movements using Right and Up axes.
     /// </summary>
+    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [CreateAssetMenu(menuName = "AV/Traject/Helix", fileName = "HelixTraject")]
     public class HelixTraject : TrajectAsset
     {

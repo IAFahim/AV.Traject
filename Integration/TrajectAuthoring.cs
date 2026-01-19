@@ -8,15 +8,13 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 
-[HelpURL("https://github.com/IAFahim/AV.Traject")]
-[AddComponentMenu("AV/Traject/TrajectAuthoring")]
-
 namespace AV.Traject.Integration
 {
     /// <summary>
     /// A thin "Driver" component that bridges the gap between Unity GameObjects
     /// and the stateless Trajectory system.
     /// </summary>
+    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [AddComponentMenu("AV/Traject/Traject Authoring")]
     public class TrajectAuthoring : MonoBehaviour
     {

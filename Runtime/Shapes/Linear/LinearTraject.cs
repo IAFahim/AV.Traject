@@ -4,14 +4,13 @@ using AV.Traject.Runtime.Integration;
 using Unity.Mathematics;
 using UnityEngine;
 
-[HelpURL("https://github.com/IAFahim/AV.Traject")]
-
 namespace AV.Traject.Runtime.Shapes.Linear
 {
     /// <summary>
     /// Linear trajectory asset.
     /// Creates straight-line movement with optional easing.
     /// </summary>
+    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [CreateAssetMenu(menuName = "AV/Traject/Linear", fileName = "LinearTraject")]
     public class LinearTraject : TrajectAsset
     {

@@ -1,0 +1,13 @@
+{
+  "name": "com.av.traject",
+  "version": "0.1.0",
+  "displayName": "AV.Traject",
+  "description": "High-Performance Vector Trajectory System for Unity",
+  "unity": "2022.3",
+  "author": {
+    "name": "AV"
+  },
+  "dependencies": {
+    "com.unity.mathematics": "1.2.6"
+  }
+}

@@ -31,7 +31,7 @@ namespace AV.Traject.Runtime.Shapes.Linear
             out float3 position)
         {
             // 1. Apply easing to time (controls acceleration along the line)
-            EaseLogic.Evaluate(in easeConfig, in t, out float easedT);
+            easeConfig.Evaluate(t, out float easedT);
 
             // 2. Calculate forward distance
             float forwardDist = range * easedT;

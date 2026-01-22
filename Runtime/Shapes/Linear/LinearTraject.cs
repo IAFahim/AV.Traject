@@ -10,7 +10,6 @@ namespace AV.Traject.Runtime.Shapes.Linear
     /// Linear trajectory asset.
     /// Creates straight-line movement with optional easing.
     /// </summary>
-    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [CreateAssetMenu(menuName = "AV/Traject/Linear", fileName = "LinearTraject")]
     public class LinearTraject : TrajectAsset
     {

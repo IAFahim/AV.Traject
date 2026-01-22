@@ -1,5 +1,3 @@
-using AV.CancelFoldout.Runtime;
-using AV.Direction;
 using AV.Direction.Runtime.Attributes;
 using AV.Traject.Runtime.Core;
 using AV.Traject.Runtime.Extensions;
@@ -14,7 +12,6 @@ namespace AV.Traject.Integration
     /// A thin "Driver" component that bridges the gap between Unity GameObjects
     /// and the stateless Trajectory system.
     /// </summary>
-    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [AddComponentMenu("AV/Traject/Traject Authoring")]
     public class TrajectAuthoring : MonoBehaviour
     {
@@ -26,7 +23,7 @@ namespace AV.Traject.Integration
         [SerializeField] [LineRange(0, 0, 1)] protected float range = 10f;
 
         [Tooltip("The core runtime state. Edits here affect behavior directly.")]
-        [SerializeField] [CancelFoldout] protected TrajectState state = TrajectState.Default;
+        [SerializeField] protected TrajectState state = TrajectState.Default;
 
         [Header("Events")]
         public UnityEvent OnComplete;

@@ -100,125 +100,177 @@ namespace AV.Traject.Runtime.Extensions
 
         /// <summary>Checks if the trajectory is currently playing.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsPlaying(in this TrajectState state)
+        public static bool IsPlaying(in this TrajectState s)
         {
-            return TrajectStateLogic.IsPlaying(in state.StatusFlags);
+            return TrajectStateLogic.IsPlaying(in s.StatusFlags);
         }
 
         /// <summary>Checks if the trajectory is set to loop.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLooping(in this TrajectState state)
+        public static bool IsLooping(in this TrajectState s)
         {
-            return TrajectStateLogic.IsLooping(in state.StatusFlags);
+            return TrajectStateLogic.IsLooping(in s.StatusFlags);
         }
 
         /// <summary>Checks if the trajectory is ping-ponging.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsPingPong(in this TrajectState state)
+        public static bool IsPingPong(in this TrajectState s)
         {
-            return TrajectStateLogic.IsPingPong(in state.StatusFlags);
+            return TrajectStateLogic.IsPingPong(in s.StatusFlags);
         }
 
         /// <summary>Checks if the trajectory completed this frame.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool HasCompleted(in this TrajectState state)
+        public static bool HasCompleted(in this TrajectState s)
         {
-            return TrajectStateLogic.IsCompleted(in state.StatusFlags);
+            return TrajectStateLogic.IsCompleted(in s.StatusFlags);
         }
 
         /// <summary>Gets the current playback time scale.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetTimeScale(in this TrajectState state)
+        public static float GetTimeScale(in this TrajectState s)
         {
-            return state.PlaybackSpeedMultiplier;
+            return s.PlaybackSpeedMultiplier;
         }
 
         // --- Mutation Methods (Using ref) ---
 
         /// <summary>Starts playback from the current time.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Play(ref this TrajectState state)
+        public static void Play(ref this TrajectState s)
         {
-            TrajectStateLogic.SetPlaying(in state.StatusFlags, out state.StatusFlags);
+            TrajectStateLogic.SetPlaying(in s.StatusFlags, out s.StatusFlags);
         }
 
         /// <summary>Pauses playback at the current time.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Pause(ref this TrajectState state)
+        public static void Pause(ref this TrajectState s)
         {
-            TrajectStateLogic.ClearPlaying(in state.StatusFlags, out state.StatusFlags);
+            TrajectStateLogic.ClearPlaying(in s.StatusFlags, out s.StatusFlags);
         }
 
         /// <summary>Stops playback and resets to the beginning.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Stop(ref this TrajectState state)
+        public static void Stop(ref this TrajectState s)
         {
-            state.PlaybackTimer.Reset();
-            TrajectStateLogic.ClearPlaying(in state.StatusFlags, out state.StatusFlags);
+            s.PlaybackTimer.Reset();
+            TrajectStateLogic.ClearPlaying(in s.StatusFlags, out s.StatusFlags);
         }
 
         /// <summary>Resets time to zero without changing playback state.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Rewind(ref this TrajectState state)
+        public static void Rewind(ref this TrajectState s)
         {
-            state.PlaybackTimer.Reset();
+            s.PlaybackTimer.Reset();
         }
 
         /// <summary>Sets the time scale multiplier.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetTimeScale(ref this TrajectState state, float timeScale)
+        public static void SetTimeScale(ref this TrajectState s, float timeScale)
         {
-            state.PlaybackSpeedMultiplier = timeScale;
+            s.PlaybackSpeedMultiplier = timeScale;
         }
 
         /// <summary>Enables slow-motion (0.5x speed).</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SlowMo(ref this TrajectState state)
+        public static void SlowMo(ref this TrajectState s)
         {
-            state.PlaybackSpeedMultiplier = 0.5f;
+            s.PlaybackSpeedMultiplier = 0.5f;
         }
 
         /// <summary>Enables fast-forward (2x speed).</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FastForward(ref this TrajectState state)
+        public static void FastForward(ref this TrajectState s)
         {
-            state.PlaybackSpeedMultiplier = 2f;
+            s.PlaybackSpeedMultiplier = 2f;
         }
 
         /// <summary>Enables reverse playback.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Reverse(ref this TrajectState state)
+        public static void Reverse(ref this TrajectState s)
         {
-            state.PlaybackSpeedMultiplier = -math.abs(state.PlaybackSpeedMultiplier);
+            s.PlaybackSpeedMultiplier = -math.abs(s.PlaybackSpeedMultiplier);
         }
 
         /// <summary>Resumes forward playback at normal speed.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void NormalSpeed(ref this TrajectState state)
+        public static void NormalSpeed(ref this TrajectState s)
         {
-            state.PlaybackSpeedMultiplier = 1f;
+            s.PlaybackSpeedMultiplier = 1f;
         }
 
         /// <summary>
         /// Main update method. Advances the trajectory state.
         /// Returns TRUE if the trajectory just completed or looped this frame.
-        /// Extension method that delegates to the Logic layer.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Tick(ref this TrajectState state, float deltaTime, out float normalizedTime)
+        public static bool Tick(ref this TrajectState s, float deltaTime, out float normalizedTime)
         {
-            // Delegate to Logic layer (Layer B) for all flow control
-            bool eventTriggered = TrajectStateLogic.Tick(
-                in state,
-                deltaTime,
-                out normalizedTime,
-                out float newTime,
-                out TrajectStatusFlags newFlags,
-                out _);
+            // 1. Validation / Early Exit
+            if (!s.IsPlaying())
+            {
+                // Calculate normalized time for rendering anyway
+                TrajectStateLogic.CalculateNormalizedProgress(
+                    in s.PlaybackTimer.Current,
+                    in s.PlaybackTimer.Duration,
+                    out normalizedTime);
+                return false;
+            }
 
-            // Update state with computed values
-            state.PlaybackTimer.Current = newTime;
-            state.StatusFlags = newFlags;
+            // 2. Calculate Next Time
+            TrajectStateLogic.CalculateNextTime(
+                in s.PlaybackTimer.Current,
+                in deltaTime,
+                in s.PlaybackSpeedMultiplier,
+                out float nextTime);
+
+            bool eventTriggered = false;
+            bool isLooping = s.IsLooping();
+
+            // 3. Handle Boundary Logic
+            if (isLooping)
+            {
+                TrajectStateLogic.WrapTime(
+                    in nextTime,
+                    in s.PlaybackTimer.Duration,
+                    out s.PlaybackTimer.Current,
+                    out eventTriggered);
+
+                // Reset completed flag (will be set if boundary reached this frame)
+                s.StatusFlags &= ~TrajectStatusFlags.HasCompleted;
+                if (eventTriggered)
+                {
+                    s.StatusFlags |= TrajectStatusFlags.HasCompleted;
+                }
+            }
+            else
+            {
+                TrajectStateLogic.ClampTime(
+                    in nextTime,
+                    in s.PlaybackTimer.Duration,
+                    out s.PlaybackTimer.Current,
+                    out bool isFinished);
+
+                if (isFinished)
+                {
+                    // Stop playing
+                    s.StatusFlags &= ~TrajectStatusFlags.IsPlaying;
+                    s.StatusFlags |= TrajectStatusFlags.HasCompleted;
+                    eventTriggered = true;
+                }
+            }
+
+            // 4. Calculate Normalized Progress
+            TrajectStateLogic.CalculateNormalizedProgress(
+                in s.PlaybackTimer.Current,
+                in s.PlaybackTimer.Duration,
+                out normalizedTime);
+
+            // 5. Apply PingPong if enabled
+            if (s.IsPingPong())
+            {
+                TrajectStateLogic.ApplyPingPong(in normalizedTime, out normalizedTime);
+            }
 
             return eventTriggered;
         }

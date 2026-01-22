@@ -12,12 +12,6 @@ namespace AV.Traject.Runtime.Core
     public static class TrajectMath
     {
         /// <summary>
-        /// The height multiplier for parabolic calculations.
-        /// A parabola with formula 4*t*(1-t) reaches height 1 at t=0.5.
-        /// </summary>
-        public const float ParabolaHeightFactor = 4f;
-
-        /// <summary>
         /// Resolves a position in world space based on the trajectory basis and local offsets.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,8 +34,8 @@ namespace AV.Traject.Runtime.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CalculateParabola(in float normalizedTime, out float resultHeight)
         {
-            // Parabola formula: heightFactor * t * (1 - t)
-            resultHeight = ParabolaHeightFactor * normalizedTime * (1f - normalizedTime);
+            // 4 * t * (1 - t)
+            resultHeight = 4f * normalizedTime * (1f - normalizedTime);
         }
 
         /// <summary>

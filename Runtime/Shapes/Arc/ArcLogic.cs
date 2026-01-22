@@ -35,7 +35,7 @@ namespace AV.Traject.Runtime.Shapes.Arc
             out float3 position)
         {
             // 1. Forward motion with easing
-            EaseLogic.Evaluate(in easeConfig, in t, out float easedT);
+            easeConfig.Evaluate(t, out float easedT);
             float forwardDist = range * easedT;
 
             // 2. Vertical arc (parabolic)

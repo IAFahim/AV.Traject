@@ -10,7 +10,6 @@ namespace AV.Traject.Runtime.Shapes.Arc
     /// Arc (parabolic) trajectory asset.
     /// Creates curved jump/lob trajectories using the Up axis.
     /// </summary>
-    [HelpURL("https://github.com/IAFahim/AV.Traject")]
     [CreateAssetMenu(menuName = "AV/Traject/Arc", fileName = "ArcTraject")]
     public class ArcTraject : TrajectAsset
     {

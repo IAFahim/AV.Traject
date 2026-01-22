@@ -1,17 +1,15 @@
 {
     "name": "AV.Traject.Integration",
-    "rootNamespace": "AV.Traject",
+    "rootNamespace": "",
     "references": [
         "Unity.Mathematics",
         "Unity.Burst",
-        "AV.Traject",
         "AV.Traject.Runtime",
-        "AV.CancelFoldout.Runtime",
-        "AV.Direction.Runtime"
+        "AV.Direction.Runtime",
+        "AV.Actions.Editor",
+        "AV.CancelFoldout.Runtime"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,

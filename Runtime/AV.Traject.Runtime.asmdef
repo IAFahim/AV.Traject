@@ -1,6 +1,6 @@
 {
     "name": "AV.Traject.Runtime",
-    "rootNamespace": "AV.Traject",
+    "rootNamespace": "",
     "references": [
         "Unity.Mathematics",
         "Unity.Burst",

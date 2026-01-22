@@ -13,31 +13,31 @@ namespace AV.Traject.Runtime.Shapes.Helix
     public static class HelixLogic
     {
         /// <summary>
-        /// Evaluates a helix trajectory at normalized time.
+        /// Evaluates a helix trajectory at normalized time t.
         /// Creates a spiral/corkscrew using the Right and Up axes of the basis.
         /// </summary>
         /// <param name="basis">The coordinate basis for evaluation.</param>
         /// <param name="range">The distance along the forward direction.</param>
         /// <param name="config">Configuration parameters (radius, frequency, phase, envelope).</param>
-        /// <param name="normalizedTime">Normalized time [0, 1].</param>
+        /// <param name="t">Normalized time [0, 1].</param>
         /// <param name="position">Output: World space position.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Evaluate(
             in TrajectBasis basis,
             in float range,
             in HelixConfig config,
-            in float normalizedTime,
+            in float t,
             out float3 position)
         {
             // 1. Calculate radius with envelope modulation
             // Envelope allows the spiral to expand/contract along the path
-            float envelope = CalculateEnvelope(in normalizedTime, in config.EnvelopeType);
+            float envelope = CalculateEnvelope(in t, in config.EnvelopeType);
             float radius = config.Radius * envelope;
 
             // 2. Calculate angle (rotates over time)
-            // normalizedTime * Frequency * 2PI = total rotation
+            // t * Frequency * 2PI = total rotation
             // Phase allows offsetting the starting angle
-            float angle = (normalizedTime * config.Frequency * math.PI * 2f) + math.radians(config.Phase);
+            float angle = (t * config.Frequency * math.PI * 2f) + math.radians(config.Phase);
 
             // 3. Calculate sine and cosine efficiently
             TrajectMath.SinCos(in angle, out float sine, out float cosine);
@@ -49,7 +49,7 @@ namespace AV.Traject.Runtime.Shapes.Helix
             float upOffset = sine * radius;
 
             // 5. Linear forward progression
-            float forwardDist = range * normalizedTime;
+            float forwardDist = range * t;
 
             // 6. Synthesize position (Forward + Circular deviation in Right/Up)
             TrajectMath.ResolvePositionInBasis(in basis, in forwardDist, in rightOffset, in upOffset, out position);
@@ -59,7 +59,7 @@ namespace AV.Traject.Runtime.Shapes.Helix
         /// Calculates envelope modulation for helix radius.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static float CalculateEnvelope(in float normalizedTime, in EnvelopeType envelopeType)
+        private static float CalculateEnvelope(in float t, in EnvelopeType envelopeType)
         {
             switch (envelopeType)
             {
@@ -67,25 +67,25 @@ namespace AV.Traject.Runtime.Shapes.Helix
                     return 1f;
 
                 case EnvelopeType.Linear:
-                    return normalizedTime;
+                    return t;
 
                 case EnvelopeType.EaseIn:
-                    return normalizedTime * normalizedTime;
+                    return t * t;
 
                 case EnvelopeType.EaseOut:
-                    float inverseTime = 1f - normalizedTime;
-                    return 1f - (inverseTime * inverseTime);
+                    float tt1 = 1f - t;
+                    return 1f - (tt1 * tt1);
 
                 case EnvelopeType.EaseInOut:
-                    return normalizedTime < 0.5f ? 2f * normalizedTime * normalizedTime : 1f - math.pow(-2f * normalizedTime + 2f, 2f) * 0.5f;
+                    return t < 0.5f ? 2f * t * t : 1f - math.pow(-2f * t + 2f, 2f) * 0.5f;
 
                 case EnvelopeType.Parabolic:
                     // 4 * t * (1 - t) = 0 -> 1 -> 0
-                    return 4f * normalizedTime * (1f - normalizedTime);
+                    return 4f * t * (1f - t);
 
                 case EnvelopeType.HalfParabolic:
                     // 2 * t - t² = 0 -> 1
-                    return 2f * normalizedTime - (normalizedTime * normalizedTime);
+                    return 2f * t - (t * t);
 
                 default:
                     return 1f;
